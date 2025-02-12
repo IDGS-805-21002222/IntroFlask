@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cinépolis - Compra de Boletos</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1E3A70; /* Azul oscuro */
+            color: white;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background-color: #004080; /* Azul corporativo */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            margin-top: 50px;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        label {
+            text-align: left;
+            display: block;
+            font-size: 16px;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .radio-group {
+            text-align: left;
+        }
+
+        .radio-group label {
+            display: inline;
+            margin-right: 10px;
+        }
+
+        .btn-primary {
+            background-color: #FFD700;
+            border: none;
+            color: black;
+            font-weight: bold;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background-color: #FFC107;
+        }
+
+        .resultado {
+            background: white;
+            color: black;
+            padding: 10px;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+
+        .logo {
+            width: 100%;
+            max-width: 300px;
+            margin-bottom: 20px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://www.sdpnoticias.com/resizer/v2/PMV3SX3225BVPLSMVDIPHVPX34.png?smart=true&auth=dd6bb2eb34cdc76d269a72ee36fdc45c3ad319913941532405d62faeccbd5bfd&width=1200&height=675" class="logo">
+        <h1>Compra de Boletos</h1>
+
+        <form method="POST" action="/cinepolis">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" value="{{ nombre }}" required>
+
+            <label for="compradores">Cantidad de compradores:</label>
+            <input type="number" id="compradores" name="compradores" value="{{ compradores }}" min="1" required>
+
+            <label for="tarjeta">¿Usa tarjeta Cineco?</label>
+            <div class="radio-group">
+                <input type="radio" id="tarjeta_si" name="tarjeta" value="Sí" {% if tarjeta == 'Sí' %}checked{% endif %} required>
+                <label for="tarjeta_si">Sí</label>
+
+                <input type="radio" id="tarjeta_no" name="tarjeta" value="No" {% if tarjeta == 'No' %}checked{% endif %} required>
+                <label for="tarjeta_no">No</label>
+            </div>
+
+            <label for="boletos">Cantidad de boletos:</label>
+            <input type="number" id="boletos" name="boletos" value="{{ boletos }}" min="1" required>
+
+            <button type="submit" class="btn btn-primary mt-3">Procesar</button>
+        </form>
+
+        {% if error %}
+        <div class="alert alert-danger mt-3" role="alert">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        {% if total is not none %}
+        <div class="resultado">
+            <h5>Detalles de la Compra</h5>
+            <p>{{ nombre }} compró {{ boletos }} boletos.</p>
+            <p><strong>Total a pagar: ${{ total }}</strong></p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

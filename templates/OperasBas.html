@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block container %}
+<form action="/resultado" method="post">
+    <label>N1:</label>
+    <input type="number" name="n1" required><br>
+    <label>N2:</label>
+    <input type="number" name="n2" required><br>
+    <input type="radio" name="operacion" value="multiplicar" required> Multiplicar<br>
+    <input type="radio" name="operacion" value="sumar"> Sumar<br>
+    <input type="radio" name="operacion" value="restar"> Restar<br>
+    <input type="radio" name="operacion" value="dividir"> Dividir<br>
+    <input type="submit" value="Calcular">
+</form>
+
+{% if resultado is not none %}
+    <h2>Resultado: {{ resultado }}</h2>
+{% endif %}
+{% endblock %}
