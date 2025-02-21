@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+
+{% block container %}
+{% import "_macros.html" as macros %}
+
+<div class="row d-flex align-items-center">
+    <div class="col-md-6">
+        <h1 class="text-center">Datos personales</h1>
+        <form action="" method="post" novalidate>
+            <div class="row control-group">
+                <div class="form-group col-xs-12 floating-label-form-group controls">
+                    {{ macros.campoNuevo(form.nombre, class='form-control') }}
+                </div>
+            </div>
+            <div class="row control-group">
+                <div class="form-group col-xs-12 floating-label-form-group controls">
+                    {{ macros.campoNuevo(form.apellidoP, class='form-control') }}
+                </div>
+            </div>
+            <div class="row control-group">
+                <div class="form-group col-xs-12 floating-label-form-group controls">
+                    {{ macros.campoNuevo(form.apellidoM, class='form-control') }}
+                </div>
+            </div>
+            <div class="row control-group">
+                <div class="form-group col-xs-12 floating-label-form-group controls">
+                    {{ macros.campoNuevo(form.fecha_nacimiento, class='form-control') }}
+                </div>
+            </div>
+            <div class="row control-group">
+                <div class="form-group col-xs-12 floating-label-form-group controls">
+                    <label for="sexo">Sexo:</label><br>
+                    {% for subfield in form.sexo %}
+                        <div class="form-check">
+                            {{ subfield(class='form-check-input') }}
+                            <label class="form-check-label">{{ subfield.label }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <input type="submit" value="Imprimir" class="btn btn-primary"/>
+        </form>
+    </div>
+
+    <!-- Sección de información al lado derecho -->
+    <div class="col-md-6 text-center" style="margin-top: -335px;">
+        <h1 class="mb-4">Hola <strong>{{ nom }} {{ apeP }} {{ apeM }}</strong></h1>
+        <h2>Tienes <strong>{{ edad }}</strong> años</h2>
+        <h2>Tu signo zodiacal chino es:</h2>
+        
+        {% if signo %}
+            <img src="{{ url_for('static', filename='bootstrap/img/' + signo + '.png') }}" alt="{{ signo }}" class="img-fluid" style="max-width: 200px;"/>
+        {% endif %}
+        
+        <h2><strong>{{ signo }}</strong></h2>
+    </div>
+</div>
+
+
+ 
+{% endblock %}

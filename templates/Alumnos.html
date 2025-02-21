@@ -4,11 +4,41 @@
 {% import "_macros.html" as macros%}
  
 <h1>Alumnos</h1>
-<form action="" method="post">
-    {{macros.campoNuevo(form.matricula)}}
-    {{macros.campoNuevo(form.nombre)}}
-    {{macros.campoNuevo(form.apellido)}}
-    {{macros.campoNuevo(form.email)}}
+<form action="" method="post" novalidate>
+    {{ form.csrf_token() }}
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+    <div class="row control-group">
+        <div class="form-groupform-group col-xs-12 floating-label-form-group controls">
+            {{macros.campoNuevo(form.matricula, class='form-control')}}
+
+        </div>
+    </div>
+
+    <div class="row control-group">
+        <div class="form-groupform-group col-xs-12 floating-label-form-group controls">
+            {{macros.campoNuevo(form.nombre, class='form-control')}}
+
+            </div>
+    </div>
+
+    <div class="row control-group">
+        <div class="form-groupform-group col-xs-12 floating-label-form-group controls">
+            {{macros.campoNuevo(form.apellido, class='form-control')}}
+
+            </div>
+    </div>
+
+    <div class="row control-group">
+        <div class="form-groupform-group col-xs-12 floating-label-form-group controls">
+            {{macros.campoNuevo(form.email, class='form-control')}}
+
+            </div>
+    </div>
+<input type="submit" value="Guardar" class="btn btn-primary"/>
 </form>
+<h2> Matricula: {{mat}}</h2>
+<h2> Nombre: {{nom}}</h2>
+<h2> Email: {{email}}</h2>
 {%endblock%}
  

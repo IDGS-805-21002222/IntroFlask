@@ -1,8 +1,16 @@
 from flask import Flask, render_template, request
+from flask import g
+from flask import flash
+from flask_wtf.csrf import CSRFProtect
+import forms
+from datetime import datetime
 
 import forms
+import forms2
 
 app = Flask(__name__)
+app.secret_key='esta es una clave secreta'
+csrf=CSRFProtect()
 
 class Cinepolis:
     def __init__(self, nombre, num_boletos, usa_tarjeta):
@@ -28,6 +36,20 @@ class Cinepolis:
 
         self.total_a_pagar = total_con_descuento
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+@app.before_request
+def before_request():
+    g.nombre = 'Mario'
+    print("before 1")
+
+@app.after_request
+def after_request(response):
+    print("after 1")
+    return response
+
 
 
 @app.route("/")
@@ -43,14 +65,49 @@ def alumnos():
     ape=''
     email=''
     alumno_clase=forms.UserForm(request.form)
-    if request.method == 'POST':
+    if request.method == 'POST' and alumno_clase.validate():
         mat = alumno_clase.matricula.data
         ape = alumno_clase.apellido.data
         email = alumno_clase.email.data 
         nom = alumno_clase.nombre.data
+        mensaje='Bienvenido {}'.format(nom)
+        flash(mensaje)
+    return render_template('Alumnos.html', form=alumno_clase, mat=mat, nom=nom, ape = ape, email=email)
 
-        print('Nombre: {}'.format(nom))
-    return render_template('Alumnos.html', form=alumno_clase)
+def calcular_edad(fecha_nacimiento):
+    today = datetime.today()
+    return today.year - fecha_nacimiento.year - ((today.month, today.day) < (fecha_nacimiento.month, fecha_nacimiento.day))
+
+def obtener_signo_zodiacal_chino(año_nacimiento):
+    signos_chinos = [
+        'Rata', 'Buey', 'Tigre', 'Conejo', 'Dragon',
+        'Serpiente', 'Caballo', 'Cabra', 'Mono', 'Gallo', 'Perro', 'Cerdo'
+    ]
+    indice = (año_nacimiento - 4) % 12
+    return signos_chinos[indice]
+
+@app.route("/Zodiaco", methods=["GET", "POST"])
+def Zodiaco():
+    nom = ''
+    apeP = ''
+    apeM = ''
+    edad = ''
+    signo = ''
+    sexo = ''
+    
+    zodiaco_clase = forms2.UserForm2(request.form)
+    
+    if request.method == 'POST' and zodiaco_clase.validate():
+        nom = zodiaco_clase.nombre.data
+        apeP = zodiaco_clase.apellidoP.data
+        apeM = zodiaco_clase.apellidoM.data
+        fecha_nacimiento = zodiaco_clase.fecha_nacimiento.data
+        sexo = zodiaco_clase.sexo.data
+        edad = calcular_edad(fecha_nacimiento)
+        signo = obtener_signo_zodiacal_chino(fecha_nacimiento.year)
+
+    return render_template('Zodiaco.html', form=zodiaco_clase, nom=nom, apeP=apeP, apeM=apeM, sexo=sexo, edad=edad, signo=signo)
+
 
 @app.route("/ejemplo1")
 def ejemplo1():
@@ -161,4 +218,5 @@ def total():
     return render_template('cinepolis.html', nombre=nombre, compradores=compradores, tarjeta=tarjeta, boletos=boletos, total=total, error='')
 
 if __name__ == "__main__":
+    csrf.init_app(app)
     app.run(debug=True, port=3000)
